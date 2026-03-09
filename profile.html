@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет • Дело Эми Лин Брэдли</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent-dark: #8C1C13;
+            --accent: #BF4342;
+            --paper: #E7D7C1;
+            --neutral: #A78A7F;
+            --dark: #735751;
+            --dark-overlay: #5a4540;
+            --border: #9a7d74;
+            --text-primary: #4a3530;
+            --text-secondary: #7a6058;
+            --shadow: rgba(115, 87, 81, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(140, 28, 19, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(191, 67, 66, 0.03) 0%, transparent 20%),
+                linear-gradient(135deg, var(--dark-overlay) 0%, var(--dark) 100%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            border-bottom: 2px solid var(--accent-dark);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 180px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .logo {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--paper);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--paper);
+            border: 2px solid var(--paper);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 25px;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(139, 28, 19, 0.02) 0%, transparent 25%),
+                radial-gradient(circle at 80% 70%, rgba(191, 67, 66, 0.02) 0%, transparent 25%);
+            pointer-events: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--accent-dark);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .card-subtitle {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        .theory-item,
+        .note-item,
+        .bookmark-item {
+            background: rgba(231, 215, 193, 0.6);
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid var(--accent-dark);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .theory-item:hover,
+        .note-item:hover,
+        .bookmark-item:hover {
+            transform: translateX(5px);
+            box-shadow: 2px 2px 10px var(--shadow);
+        }
+
+        .theory-title,
+        .note-title,
+        .bookmark-title {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .theory-meta,
+        .note-meta,
+        .bookmark-meta {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .theory-content,
+        .note-content {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            color: var(--text-primary);
+            margin-top: 10px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .theory-status {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .theory-status.draft {
+            background: rgba(167, 138, 127, 0.2);
+            color: var(--neutral);
+        }
+
+        .theory-status.published {
+            background: rgba(140, 28, 19, 0.15);
+            color: var(--accent-dark);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--accent);
+            color: var(--paper);
+            border: none;
+            padding: 10px 22px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--accent-dark);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .btn:hover {
+            color: var(--paper);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent-dark);
+        }
+
+        .btn-sm {
+            padding: 7px 15px;
+            font-size: 13px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--neutral);
+            color: var(--dark);
+        }
+
+        .btn-secondary::before {
+            background: var(--neutral);
+        }
+
+        .btn-danger {
+            background: var(--dark);
+            color: var(--paper);
+        }
+
+        .btn-danger::before {
+            background: var(--accent-dark);
+        }
+
+        .btn-admin {
+            background: var(--accent-dark);
+            color: var(--paper);
+        }
+
+        .btn-admin::before {
+            background: #6a150e;
+        }
+
+        .btn-home {
+            background: var(--neutral);
+            color: var(--paper);
+        }
+
+        .btn-home::before {
+            background: #8a6f64;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 18px 10px;
+            background: rgba(231, 215, 193, 0.7);
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: rgba(231, 215, 193, 0.8);
+            border: 1px solid var(--border);
+            color: var(--dark);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: var(--paper);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px var(--shadow);
+        }
+
+        .action-btn.danger:hover {
+            border-color: var(--accent-dark);
+        }
+
+        .action-icon {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-family: monospace;
+        }
+
+        .empty-state {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 50px 20px;
+            line-height: 1.6;
+        }
+
+        .page-number {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            color: rgba(231, 215, 193, 0.6);
+            letter-spacing: 2px;
+            z-index: 100;
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--paper);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid var(--accent-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-dark);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            color: var(--accent);
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.3);
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .bookmark-form {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(231, 215, 193, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .bookmark-form.active {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 26px;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">ЛИЧНЫЙ КАБИНЕТ</div>
+            <div class="user-info">
+                <div class="user-avatar">U</div>
+                <span style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; color: var(--paper); letter-spacing: 1px; font-weight: 500;" id="usernameDisplay">User_734</span>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Мои теории</div>
+                            <div class="card-subtitle" id="theoryCounter">0 черновиков • 0 опубликовано</div>
+                        </div>
+                        <button class="btn" onclick="openModal('theoryModal')">+ Новая теория</button>
+                    </div>
+
+                    <div id="theoriesList">
+                        <!-- Теории будут добавляться сюда -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Мои заметки</div>
+                        <button class="btn btn-outline" onclick="openModal('noteModal')">+ Заметка</button>
+                    </div>
+
+                    <div id="notesList">
+                        <!-- Заметки будут добавляться сюда -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Статистика</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="bookmarkCount">0</div>
+                            <div class="stat-label">Закладок</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="theoryCount">0</div>
+                            <div class="stat-label">Теорий</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="noteCount">0</div>
+                            <div class="stat-label">Заметок</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Дней</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Закладки</div>
+                        <button class="btn btn-outline" onclick="toggleBookmarkForm()">+ Добавить</button>
+                    </div>
+
+                    <div id="bookmarksList">
+                        <!-- Закладки будут добавляться сюда -->
+                    </div>
+
+                    <div class="bookmark-form" id="bookmarkForm">
+                        <div class="form-group">
+                            <label class="form-label">Название закладки</label>
+                            <input type="text" id="bookmarkName" class="form-input" placeholder="Введите название...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ссылка / материал</label>
+                            <input type="text" id="bookmarkUrl" class="form-input" placeholder="URL или описание...">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn" onclick="addBookmark()">Сохранить</button>
+                            <button class="btn btn-secondary" onclick="toggleBookmarkForm()">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Быстрые действия</div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="action-btn" onclick="openModal('theoryModal')">
+                            <div class="action-icon">🔍</div>
+                            <div>Новая теория</div>
+                        </div>
+                        <div class="action-btn" onclick="openModal('noteModal')">
+                            <div class="action-icon">📝</div>
+                            <div>Заметка</div>
+                        </div>
+                        <div class="action-btn" onclick="toggleBookmarkForm()">
+                            <div class="action-icon">📁</div>
+                            <div>Закладки</div>
+                        </div>
+                        <div class="action-btn btn-admin" onclick="window.location.href='admin.html'">
+                            <div class="action-icon">⚙️</div>
+                            <div>Админ-панель</div>
+                        </div>
+                        <div class="action-btn btn-home" onclick="window.location.href='index.html'">
+                            <div class="action-icon">🏠</div>
+                            <div>На главную</div>
+                        </div>
+                        <div class="action-btn danger" onclick="logout()">
+                            <div class="action-icon">🚪</div>
+                            <div>Выход</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-number">СТРАНИЦА 07 / 42</div>
+
+    <!-- Модальное окно: Новая теория -->
+    <div class="modal" id="theoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Новая теория</div>
+                <button class="modal-close" onclick="closeModal('theoryModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Название теории</label>
+                    <input type="text" id="theoryTitle" class="form-input" placeholder="Например: Версия о похищении...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Описание</label>
+                    <textarea id="theoryDescription" class="form-textarea" placeholder="Опишите вашу теорию подробно..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ключевые факты</label>
+                    <textarea id="theoryFacts" class="form-textarea" placeholder="Перечислите факты, на которых основана теория..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Теги</label>
+                    <input type="text" id="theoryTags" class="form-input" placeholder="Карибы, торговля людьми, свидетели...">
+                </div>
+            </div>
+            <div class="form-footer">
+                <button class="btn btn-secondary" onclick="closeModal('theoryModal')">Отмена</button>
+                <button class="btn" onclick="saveTheory('draft')">Сохранить как черновик</button>
+                <button class="btn" style="background: var(--accent-dark);" onclick="saveTheory('published')">Отправить на модерацию</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Новая заметка -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Новая заметка</div>
+                <button class="modal-close" onclick="closeModal('noteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Заголовок</label>
+                    <input type="text" id="noteTitle" class="form-input" placeholder="Краткое название заметки...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Содержание</label>
+                    <textarea id="noteContent" class="form-textarea" placeholder="Запишите свои мысли, наблюдения или вопросы..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Связано с</label>
+                    <input type="text" id="noteRelated" class="form-input" placeholder="Какой аспект дела?">
+                </div>
+            </div>
+            <div class="form-footer">
+                <button class="btn btn-secondary" onclick="closeModal('noteModal')">Отмена</button>
+                <button class="btn" onclick="saveNote()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация данных
+        let theories = JSON.parse(localStorage.getItem('theories')) || [];
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+        // Проверка авторизации при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            renderTheories();
+            renderNotes();
+            renderBookmarks();
+            updateStats();
+        });
+
+        // Проверка авторизации
+        function checkAuth() {
+            const currentUser = localStorage.getItem('currentUser');
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                usernameDisplay.textContent = user.username;
+            } else {
+                // Если не авторизован, показываем дефолтное имя
+                usernameDisplay.textContent = 'User_734';
+            }
+        }
+
+        // Выход из системы
+        function logout() {
+            localStorage.removeItem('currentUser');
+            alert('Вы вышли из системы');
+            window.location.reload();
+        }
+
+        // ========== ТЕОРИИ ==========
+        function saveTheory(status) {
+            const title = document.getElementById('theoryTitle').value.trim();
+            const description = document.getElementById('theoryDescription').value.trim();
+            const facts = document.getElementById('theoryFacts').value.trim();
+            const tags = document.getElementById('theoryTags').value.trim();
+
+            if (!title) {
+                alert('Пожалуйста, введите название теории');
+                return;
+            }
+
+            const theory = {
+                id: Date.now(),
+                title: title,
+                description: description,
+                facts: facts,
+                tags: tags,
+                status: status,
+                date: new Date().toLocaleDateString('ru-RU')
+            };
+
+            theories.push(theory);
+            localStorage.setItem('theories', JSON.stringify(theories));
+            
+            renderTheories();
+            updateStats();
+            resetTheoryForm();
+            closeModal('theoryModal');
+        }
+
+        function renderTheories() {
+            const container = document.getElementById('theoriesList');
+            const counter = document.getElementById('theoryCounter');
+
+            if (theories.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        У вас пока нет теорий.<br>
+                        Создайте первую версию событий — каждая гипотеза важна.<br>
+                        <span style="font-size: 12px; margin-top: 10px; display: block; color: var(--neutral);">
+                            «Истина где-то рядом»
+                        </span>
+                    </div>
+                `;
+                counter.textContent = '0 черновиков • 0 опубликовано';
+                return;
+            }
+
+            const drafts = theories.filter(t => t.status === 'draft').length;
+            const published = theories.filter(t => t.status === 'published').length;
+            counter.textContent = `${drafts} черновиков • ${published} опубликовано`;
+
+            container.innerHTML = theories.map(theory => {
+                const statusClass = theory.status === 'draft' ? 'draft' : 'published';
+                const statusText = theory.status === 'draft' ? 'Черновик' : 'Опубликовано';
+                
+                return `
+                    <div class="theory-item" data-id="${theory.id}">
+                        <div class="theory-title">${escapeHtml(theory.title)}</div>
+                        <div class="theory-meta">Создано: ${theory.date} <span class="theory-status ${statusClass}">${statusText}</span></div>
+                        <div class="theory-content">${escapeHtml(theory.description)}</div>
+                        ${theory.facts ? `<div style="margin-top: 10px; font-size: 13px; color: var(--text-secondary);"><strong>Факты:</strong> ${escapeHtml(theory.facts)}</div>` : ''}
+                        ${theory.tags ? `<div style="margin-top: 8px; font-size: 12px; color: var(--accent);"><strong>Теги:</strong> ${escapeHtml(theory.tags)}</div>` : ''}
+                        <div class="item-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editTheory(${theory.id})">Редактировать</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteTheory(${theory.id})">Удалить</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editTheory(id) {
+            const theory = theories.find(t => t.id === id);
+            if (!theory) return;
+
+            document.getElementById('theoryTitle').value = theory.title;
+            document.getElementById('theoryDescription').value = theory.description;
+            document.getElementById('theoryFacts').value = theory.facts || '';
+            document.getElementById('theoryTags').value = theory.tags || '';
+
+            openModal('theoryModal');
+            document.getElementById('theoryModal').dataset.editId = id;
+        }
+
+        function deleteTheory(id) {
+            if (confirm('Вы уверены, что хотите удалить эту теорию?')) {
+                theories = theories.filter(t => t.id !== id);
+                localStorage.setItem('theories', JSON.stringify(theories));
+                renderTheories();
+                updateStats();
+            }
+        }
+
+        function resetTheoryForm() {
+            document.getElementById('theoryTitle').value = '';
+            document.getElementById('theoryDescription').value = '';
+            document.getElementById('theoryFacts').value = '';
+            document.getElementById('theoryTags').value = '';
+            document.getElementById('theoryModal').dataset.editId = '';
+        }
+
+        // ========== ЗАМЕТКИ ==========
+        function saveNote() {
+            const title = document.getElementById('noteTitle').value.trim();
+            const content = document.getElementById('noteContent').value.trim();
+            const related = document.getElementById('noteRelated').value.trim();
+
+            if (!title || !content) {
+                alert('Пожалуйста, заполните заголовок и содержание');
+                return;
+            }
+
+            const note = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                related: related,
+                date: new Date().toLocaleDateString('ru-RU')
+            };
+
+            notes.push(note);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            
+            renderNotes();
+            updateStats();
+            resetNoteForm();
+            closeModal('noteModal');
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('notesList');
+
+            if (notes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        У вас пока нет заметок.<br>
+                        Начните исследование дела и сохраняйте мысли здесь.<br>
+                        <span style="font-size: 12px; margin-top: 10px; display: block; color: var(--neutral);">
+                            «Каждая деталь имеет значение»
+                        </span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = notes.map(note => {
+                return `
+                    <div class="note-item" data-id="${note.id}">
+                        <div class="note-title">${escapeHtml(note.title)}</div>
+                        <div class="note-meta">Создано: ${note.date} ${note.related ? '• ' + escapeHtml(note.related) : ''}</div>
+                        <div class="note-content">${escapeHtml(note.content)}</div>
+                        <div class="item-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editNote(${note.id})">Редактировать</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteNote(${note.id})">Удалить</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editNote(id) {
+            const note = notes.find(n => n.id === id);
+            if (!note) return;
+
+            document.getElementById('noteTitle').value = note.title;
+            document.getElementById('noteContent').value = note.content;
+            document.getElementById('noteRelated').value = note.related || '';
+
+            openModal('noteModal');
+            document.getElementById('noteModal').dataset.editId = id;
+        }
+
+        function deleteNote(id) {
+            if (confirm('Вы уверены, что хотите удалить эту заметку?')) {
+                notes = notes.filter(n => n.id !== id);
+                localStorage.setItem('notes', JSON.stringify(notes));
+                renderNotes();
+                updateStats();
+            }
+        }
+
+        function resetNoteForm() {
+            document.getElementById('noteTitle').value = '';
+            document.getElementById('noteContent').value = '';
+            document.getElementById('noteRelated').value = '';
+            document.getElementById('noteModal').dataset.editId = '';
+        }
+
+        // ========== ЗАКЛАДКИ ==========
+        function addBookmark() {
+            const name = document.getElementById('bookmarkName').value.trim();
+            const url = document.getElementById('bookmarkUrl').value.trim();
+
+            if (!name) {
+                alert('Пожалуйста, введите название закладки');
+                return;
+            }
+
+            const bookmark = {
+                id: Date.now(),
+                name: name,
+                url: url,
+                date: new Date().toLocaleDateString('ru-RU')
+            };
+
+            bookmarks.push(bookmark);
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            
+            renderBookmarks();
+            updateStats();
+            
+            document.getElementById('bookmarkName').value = '';
+            document.getElementById('bookmarkUrl').value = '';
+            toggleBookmarkForm();
+        }
+
+        function renderBookmarks() {
+            const container = document.getElementById('bookmarksList');
+
+            if (bookmarks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding: 30px 20px;">
+                        Нет закладок.<br>
+                        Сохраняйте важные материалы для быстрого доступа.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = bookmarks.map(bookmark => {
+                return `
+                    <div class="bookmark-item" data-id="${bookmark.id}">
+                        <div style="flex: 1;">
+                            <div class="bookmark-title">${escapeHtml(bookmark.name)}</div>
+                            ${bookmark.url ? `<div class="bookmark-meta">${escapeHtml(bookmark.url)}</div>` : ''}
+                        </div>
+                        <button class="btn btn-sm btn-danger" style="padding: 5px 10px; margin-left: 10px;" onclick="deleteBookmark(${bookmark.id})">×</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteBookmark(id) {
+            if (confirm('Удалить закладку?')) {
+                bookmarks = bookmarks.filter(b => b.id !== id);
+                localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+                renderBookmarks();
+                updateStats();
+            }
+        }
+
+        function toggleBookmarkForm() {
+            const form = document.getElementById('bookmarkForm');
+            form.classList.toggle('active');
+        }
+
+        // ========== СТАТИСТИКА ==========
+        function updateStats() {
+            document.getElementById('bookmarkCount').textContent = bookmarks.length;
+            document.getElementById('theoryCount').textContent = theories.length;
+            document.getElementById('noteCount').textContent = notes.length;
+        }
+
+        // ========== МОДАЛЬНЫЕ ОКНА ==========
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            if (modalId === 'theoryModal') resetTheoryForm();
+            if (modalId === 'noteModal') resetNoteForm();
+        }
+
+        // Закрытие модалки по клику вне контента
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Экранирование HTML для безопасности
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+</body>
+</html>

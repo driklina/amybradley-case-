@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форум - Дело Эми Лин Брэдли</title>
+    
+    <style>
+        :root {
+            --primary-color: #8C1C13;
+            --secondary-color: #8C1C13;
+            --accent-color: #BF4342;
+            --text-color: #ffffff;
+            --bg-color: #E7D7C1;
+            --card-bg: #A78A7F;
+            --sidebar-bg: #6B4E47;
+            --message-bg: #F5EBE0;
+            --input-bg: #D4C4B0;
+            --moderator-color: #27AE60;
+            --blocked-color: #E74C3C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Фоновый шум */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CiAgPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMDAwIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiIvPgo8L3N2Zz4=');
+            z-index: -1;
+            opacity: 0.03;
+        }
+
+        /* Шапка */
+        .forum-header {
+            background-color: var(--primary-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .forum-header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .forum-header .logo a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .role-user {
+            background: rgba(167, 138, 127, 0.3);
+            color: var(--text-color);
+        }
+
+        .role-moderator {
+            background: rgba(39, 174, 96, 0.3);
+            color: #27AE60;
+        }
+
+        .role-admin {
+            background: rgba(191, 67, 66, 0.3);
+            color: var(--accent-color);
+        }
+
+        .login-btn {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #ff6666;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #C0392B;
+            transform: translateY(-2px);
+        }
+
+        /* Основной контейнер */
+        .forum-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Боковая панель */
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+        }
+
+        .search-box {
+            margin-bottom: 2rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .search-box input::placeholder {
+            color: var(--primary-color);
+            opacity: 0.6;
+        }
+
+        .create-topic-btn {
+            width: 100%;
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .create-topic-btn:hover {
+            background-color: #ff6666;
+            transform: translateY(-2px);
+        }
+
+        .mod-panel-btn {
+            width: 100%;
+            background-color: var(--moderator-color);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .mod-panel-btn:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+
+        .topics-list h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .topic-item {
+            background-color: var(--message-bg);
+            color: var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .topic-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .topic-item.active {
+            background-color: var(--card-bg);
+            border-left-width: 6px;
+        }
+
+        .topic-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .topic-item span {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Основная область */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topic-header {
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .topic-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-header .meta {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Панель модератора */
+        .mod-panel {
+            background-color: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27AE60;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .mod-panel h3 {
+            color: #27AE60;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blocked-users {
+            margin-top: 1rem;
+        }
+
+        .blocked-user-item {
+            background: rgba(231, 76, 60, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .unblock-btn {
+            background: none;
+            border: 1px solid #27AE60;
+            color: #27AE60;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .unblock-btn:hover {
+            background: rgba(39, 174, 96, 0.2);
+        }
+
+        /* Сообщения */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            padding-right: 1rem;
+        }
+
+        .message {
+            background-color: var(--message-bg);
+            color: var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(140, 28, 19, 0.2);
+        }
+
+        .message-author {
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-badge {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .badge-moderator {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27AE60;
+            border: 1px solid #27AE60;
+        }
+
+        .badge-admin {
+            background: rgba(191, 67, 66, 0.2);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+
+        .badge-blocked {
+            background: rgba(231, 76, 60, 0.2);
+            color: #E74C3C;
+            border: 1px solid #E74C3C;
+            text-decoration: line-through;
+        }
+
+        .message-date {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .message-text {
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+
+        .mod-btn {
+            background: none;
+            border: 1px solid #27AE60;
+            color: #27AE60;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .mod-btn:hover {
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .mod-btn.delete {
+            border-color: #E74C3C;
+            color: #E74C3C;
+        }
+
+        .mod-btn.delete:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .mod-btn.block {
+            border-color: #9B59B6;
+            color: #9B59B6;
+        }
+
+        .mod-btn.block:hover {
+            background: rgba(155, 89, 182, 0.1);
+        }
+
+        .blocked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(231, 76, 60, 0.1);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .blocked-text {
+            color: #E74C3C;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Поле ввода */
+        .input-area {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: none;
+            min-height: 60px;
+        }
+
+        .message-input::placeholder {
+            color: var(--primary-color);
+            opacity: 0.6;
+        }
+
+        .message-input:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .send-btn {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .send-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background-color: #ff6666;
+            transform: scale(1.1);
+        }
+
+        /* Модальное окно создания темы */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.cancel {
+            background-color: #666;
+            color: #fff;
+        }
+
+        .modal-btn.create {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .forum-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 300px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .send-btn {
+                width: 100%;
+                height: 45px;
+                border-radius: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <div class="forum-header">
+        <div class="logo">
+            <a href="index.html">← На главную</a>
+        </div>
+        <div class="auth-section" id="authSection">
+            <!-- Здесь будет отображаться информация о пользователе или кнопка входа -->
+        </div>
+    </div>
+
+    <!-- Основной контейнер -->
+    <div class="forum-container">
+        <!-- Боковая панель -->
+        <aside class="sidebar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Поиск по теме..." onkeyup="searchTopics()">
+            </div>
+            
+            <button class="create-topic-btn" id="createTopicBtn" style="display: none;" onclick="openModal()">Создать новую тему</button>
+            
+            <button class="mod-panel-btn" id="modPanelBtn" style="display: none;" onclick="toggleModPanel()">🛡️ Панель модератора</button>
+            
+            <div class="topics-list">
+                <h3>Ранее созданные темы</h3>
+                <div id="topicsList">
+                    <!-- Темы будут добавляться здесь -->
+                    <div style="text-align: center; padding: 2rem; color: var(--primary-color);">
+                        <div style="border: 4px solid rgba(140, 28, 19, 0.2); border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; margin: 0 auto 1rem; animation: spin 1s linear infinite;"></div>
+                        <p>Загрузка тем...</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Основная область -->
+        <main class="main-content">
+            <!-- Панель модератора (скрыта по умолчанию) -->
+            <div class="mod-panel" id="modPanel">
+                <h3>🛡️ Панель модератора</h3>
+                <div class="blocked-users">
+                    <strong>Заблокированные пользователи:</strong>
+                    <div id="blockedUsersList">
+                        <!-- Список заблокированных будет здесь -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic-header" id="currentTopic">
+                <h2>Выберите тему для обсуждения</h2>
+                <div class="meta">Нажмите на тему в боковой панели</div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <!-- Сообщения будут здесь -->
+                <div style="text-align: center; padding: 2rem; color: var(--primary-color);">
+                    <p>Выберите тему, чтобы увидеть сообщения</p>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <textarea 
+                    class="message-input" 
+                    id="messageInput" 
+                    placeholder="Начните писать..."
+                    onkeypress="handleKeyPress(event)"
+                    disabled
+                ></textarea>
+                <button class="send-btn" onclick="sendMessage()" disabled>➤</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно создания темы -->
+    <div class="modal" id="createTopicModal">
+        <div class="modal-content">
+            <h2>Создать новую тему</h2>
+            <div class="form-group">
+                <label for="topicTitle">Название темы</label>
+                <input type="text" id="topicTitle" placeholder="Введите название темы...">
+            </div>
+            <div class="form-group">
+                <label for="topicDescription">Описание</label>
+                <textarea id="topicDescription" placeholder="Опишите тему..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">Отмена</button>
+                <button class="modal-btn create" onclick="createTopic()">Создать</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация данных
+        let topics = [];
+        let currentTopicId = null;
+        let currentUser = null;
+        let blockedUsers = [];
+
+        // Загрузка при старте
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+
+        // Проверка авторизации
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth-check.php', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUser = result.user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    document.getElementById('authSection').innerHTML = `
+                        <div class="user-info">
+                            <span class="user-role role-${currentUser.role || 'user'}">
+                                ${currentUser.role === 'moderator' ? '🛡️ Модератор' : currentUser.role === 'admin' ? '⚙️ Админ' : '👤 Пользователь'}
+                            </span>
+                            <span style="margin-right: 12px; color: var(--primary-color); font-weight: 600; font-size: 0.95rem;">
+                                ${currentUser.username}
+                            </span>
+                            <button class="logout-btn" onclick="logout()">Выйти</button>
+                        </div>
+                    `;
+                    
+                    // Показываем кнопку создания темы для авторизованных
+                    document.getElementById('createTopicBtn').style.display = 'block';
+                    
+                    // Показываем кнопку панели модератора для модераторов и админов
+                    if (currentUser.role === 'moderator' || currentUser.role === 'admin') {
+                        document.getElementById('modPanelBtn').style.display = 'block';
+                    }
+                    
+                    // Загружаем заблокированных пользователей
+                    loadBlockedUsers();
+                    
+                    // Загружаем темы
+                    loadTopics();
+                } else {
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="login-btn" onclick="goToAuth()">Войти</button>
+                    `;
+                    // Загружаем темы в режиме просмотра
+                    loadTopics();
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                // Резервный вариант: проверка localStorage
+                const localUser = localStorage.getItem('currentUser');
+                if (localUser) {
+                    currentUser = JSON.parse(localUser);
+                    document.getElementById('authSection').innerHTML = `
+                        <div class="user-info">
+                            <span class="user-role role-${currentUser.role || 'user'}">
+                                ${currentUser.role === 'moderator' ? '🛡️ Модератор' : currentUser.role === 'admin' ? '⚙️ Админ' : '👤 Пользователь'}
+                            </span>
+                            <span style="margin-right: 12px; color: var(--primary-color); font-weight: 600; font-size: 0.95rem;">
+                                ${currentUser.username}
+                            </span>
+                            <button class="logout-btn" onclick="logout()">Выйти</button>
+                        </div>
+                    `;
+                    document.getElementById('createTopicBtn').style.display = 'block';
+                    
+                    if (currentUser.role === 'moderator' || currentUser.role === 'admin') {
+                        document.getElementById('modPanelBtn').style.display = 'block';
+                    }
+                    
+                    loadBlockedUsers();
+                    loadTopics();
+                } else {
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="login-btn" onclick="goToAuth()">Войти</button>
+                    `;
+                    loadTopics();
+                }
+            }
+        }
+
+        // Загрузка заблокированных пользователей
+        async function loadBlockedUsers() {
+            try {
+                const response = await fetch('/api/get-blocked-users.php', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    blockedUsers = result.blockedUsers || [];
+                }
+            } catch (error) {
+                console.error('Error loading blocked users:', error);
+            }
+        }
+
+        // Рендер списка тем
+        function renderTopicsList(filter = '') {
+            const list = document.getElementById('topicsList');
+            list.innerHTML = '';
+
+            const filteredTopics = topics.filter(topic => 
+                topic.title.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filteredTopics.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--primary-color);">
+                        <p>Нет тем для обсуждения</p>
+                        ${currentUser ? '<p style="margin-top: 10px; font-size: 0.9rem;">Создайте первую тему!</p>' : ''}
+                    </div>
+                `;
+                return;
+            }
+
+            filteredTopics.forEach(topic => {
+                const topicEl = document.createElement('div');
+                // Исправлено: используем == вместо === для сравнения типов (строка vs число)
+                topicEl.className = `topic-item ${topic.id == currentTopicId ? 'active' : ''}`;
+                topicEl.onclick = () => loadTopic(topic.id);
+                
+                // Исправлено: добавляем безопасное экранирование
+                const title = escapeHtml(topic.title || 'Без названия');
+                const count = topic.message_count || 0;
+                
+                topicEl.innerHTML = `
+                    <h4>${title}</h4>
+                    <span>${count} сообщений</span>
+                `;
+                list.appendChild(topicEl);
+            });
+            
+            console.log('Отображено тем:', filteredTopics.length);
+        }
+
+        // Загрузка тем
+        async function loadTopics() {
+            console.log('Загрузка тем...');
+            
+            try {
+                const response = await fetch('/api/forum/get-topics.php', {
+                    credentials: 'include'
+                });
+                
+                console.log('Статус ответа:', response.status);
+                const result = await response.json();
+                console.log('Данные тем:', result);
+                
+                if (result.success) {
+                    topics = result.topics || [];
+                    console.log('Количество загруженных тем:', topics.length);
+                    renderTopicsList();
+                } else {
+                    console.error('Error loading topics:', result.message);
+                    renderTopicsList();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки тем:', error);
+                renderTopicsList();
+            }
+        }
+
+        // Загрузка темы
+        async function loadTopic(id) {
+            currentTopicId = id;
+            const topic = topics.find(t => t.id == id);
+            
+            if (topic) {
+                document.querySelector('#currentTopic h2').textContent = topic.title;
+                
+                // Включаем поле ввода для авторизованных
+                document.getElementById('messageInput').disabled = !currentUser;
+                document.querySelector('.send-btn').disabled = !currentUser;
+                
+                // Загружаем сообщения
+                loadMessages(id);
+            }
+        }
+
+        // Загрузка сообщений
+        async function loadMessages(topicId) {
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--primary-color);">
+                    <div style="border: 4px solid rgba(140, 28, 19, 0.2); border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; margin: 0 auto 1rem; animation: spin 1s linear infinite;"></div>
+                    <p>Загрузка сообщений...</p>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+            
+            try {
+                const response = await fetch(`/api/forum/get-messages.php?topic_id=${topicId}`, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    container.innerHTML = '';
+                    
+                    if (result.messages.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--primary-color);">
+                                <p>Пока нет сообщений в этой теме</p>
+                                ${currentUser ? '<p style="margin-top: 10px; font-size: 0.9rem;">Будьте первым, кто напишет!</p>' : ''}
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    result.messages.forEach(msg => {
+                        addMessageToContainer(msg.author, msg.message_text, msg.created_at, msg.author_id, msg.id);
+                    });
+                } else {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--primary-color);">
+                            <p>Ошибка загрузки сообщений</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--primary-color);">
+                        <p>Ошибка загрузки сообщений</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Добавление сообщения в контейнер (ИСПРАВЛЕНО: используем messageId вместо index)
+        function addMessageToContainer(author, text, date, authorId, messageId) {
+            const container = document.getElementById('messagesContainer');
+            
+            // Проверяем, заблокирован ли автор
+            const isBlocked = blockedUsers.includes(authorId.toString());
+            
+            const msgEl = document.createElement('div');
+            msgEl.className = 'message';
+            
+            const formattedDate = new Date(date).toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            if (isBlocked) {
+                msgEl.innerHTML = `
+                    <div class="blocked-overlay">
+                        <div class="blocked-text">⚠️ Пользователь заблокирован модератором</div>
+                    </div>
+                    <div style="opacity: 0.3;">
+                        <div class="message-header">
+                            <span class="message-author">
+                                ${escapeHtml(author)}
+                                <span class="author-badge badge-blocked">ЗАБЛОКИРОВАН</span>
+                            </span>
+                            <span class="message-date">${formattedDate}</span>
+                        </div>
+                        <div class="message-text">${escapeHtml(text)}</div>
+                    </div>
+                `;
+            } else {
+                let modActions = '';
+                if (currentUser && (currentUser.role === 'moderator' || currentUser.role === 'admin')) {
+                    modActions = `
+                        <div class="message-actions">
+                            <button class="mod-btn delete" onclick="deleteMessage(${messageId})">🗑️ Удалить</button>
+                            <button class="mod-btn block" onclick="blockUser('${authorId}', '${escapeHtml(author)}')">🚫 Заблокировать</button>
+                        </div>
+                    `;
+                }
+                
+                const authorBadge = currentUser && currentUser.username === author ? 
+                    (currentUser.role === 'moderator' ? '<span class="author-badge badge-moderator">🛡️ Модератор</span>' : 
+                     currentUser.role === 'admin' ? '<span class="author-badge badge-admin">⚙️ Админ</span>' : '') : '';
+                
+                msgEl.innerHTML = `
+                    <div class="message-header">
+                        <span class="message-author">
+                            ${escapeHtml(author)}
+                            ${authorBadge}
+                        </span>
+                        <span class="message-date">${formattedDate}</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(text)}</div>
+                    ${modActions}
+                `;
+            }
+            
+            container.appendChild(msgEl);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Отправка сообщения
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (text && currentTopicId && currentUser) {
+                // Проверяем, не заблокирован ли текущий пользователь
+                if (blockedUsers.includes(currentUser.id.toString())) {
+                    alert('❌ Вы заблокированы и не можете отправлять сообщения');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/forum/post-message.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            topic_id: currentTopicId,
+                            message: text
+                        }),
+                        credentials: 'include'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        input.value = '';
+                        loadMessages(currentTopicId);
+                    } else {
+                        alert('Ошибка: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Ошибка отправки сообщения');
+                }
+            }
+        }
+
+        // Обработка нажатия Enter
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Модальное окно
+        function openModal() {
+            if (!currentUser) {
+                alert('Пожалуйста, войдите в систему для создания темы');
+                return;
+            }
+            document.getElementById('createTopicModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('createTopicModal').classList.remove('active');
+        }
+
+        // Создание темы
+        async function createTopic() {
+            const title = document.getElementById('topicTitle').value.trim();
+            const description = document.getElementById('topicDescription').value.trim();
+
+            if (!title) {
+                alert('Введите название темы');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/forum/create-topic.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Очищаем форму
+                    document.getElementById('topicTitle').value = '';
+                    document.getElementById('topicDescription').value = '';
+                    closeModal();
+                    
+                    // Принудительно перезагружаем список тем
+                    topics = [];
+                    await loadTopics();
+                    
+                    // Выбираем новую тему
+                    if (result.topic_id) {
+                        currentTopicId = result.topic_id;
+                        loadTopic(result.topic_id);
+                    }
+                    
+                    alert('✅ Тема успешно создана!');
+                } else {
+                    alert('❌ Ошибка: ' + (result.message || 'Неизвестная ошибка'));
+                }
+            } catch (error) {
+                console.error('Ошибка создания темы:', error);
+                alert('❌ Ошибка при создании темы: ' + error.message);
+            }
+        }
+
+        // Поиск
+        function searchTopics() {
+            const filter = document.getElementById('searchInput').value;
+            renderTopicsList(filter);
+        }
+
+        // Закрытие модального окна при клике вне его
+        document.getElementById('createTopicModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+
+        // 🔐 Переход на страницу авторизации
+        function goToAuth() {
+            window.location.href = 'auth.html';
+        }
+
+        // 🔐 Функция выхода
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.reload();
+        }
+
+        // 🛡️ Удаление сообщения (ИСПРАВЛЕНО: используем messageId вместо index)
+        async function deleteMessage(messageId) {
+            if (confirm('Удалить это сообщение?')) {
+                try {
+                    const response = await fetch('/api/forum/delete-message.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message_id: messageId
+                        }),
+                        credentials: 'include'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        loadMessages(currentTopicId);
+                        alert('Сообщение удалено');
+                    } else {
+                        alert('Ошибка: ' + (result.message || 'Неизвестная ошибка'));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Ошибка удаления сообщения: ' + error.message);
+                }
+            }
+        }
+
+        // 🛡️ Блокировка пользователя (только для модераторов)
+        async function blockUser(authorId, authorName) {
+            if (confirm(`Заблокировать пользователя "${authorName}"?\nЗаблокированный пользователь не сможет отправлять сообщения.`)) {
+                try {
+                    const response = await fetch('/api/block-user.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: authorId
+                        }),
+                        credentials: 'include'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Обновляем список заблокированных
+                        loadBlockedUsers();
+                        loadMessages(currentTopicId);
+                        updateBlockedUsersList();
+                        alert(`✅ Пользователь "${authorName}" заблокирован`);
+                    } else {
+                        alert('Ошибка: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Ошибка блокировки пользователя');
+                }
+            }
+        }
+
+        // 🛡️ Разблокировка пользователя
+        async function unblockUser(authorId) {
+            if (confirm('Разблокировать этого пользователя?')) {
+                try {
+                    const response = await fetch('/api/unblock-user.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: authorId
+                        }),
+                        credentials: 'include'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Обновляем список заблокированных
+                        loadBlockedUsers();
+                        updateBlockedUsersList();
+                        loadMessages(currentTopicId);
+                        alert('Пользователь разблокирован');
+                    } else {
+                        alert('Ошибка: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Ошибка разблокировки пользователя');
+                }
+            }
+        }
+
+        // 🛡️ Обновление списка заблокированных
+        function updateBlockedUsersList() {
+            const list = document.getElementById('blockedUsersList');
+            if (blockedUsers.length === 0) {
+                list.innerHTML = '<div style="color: #7f8c8d; font-style: italic;">Нет заблокированных пользователей</div>';
+                return;
+            }
+            
+            // Получаем имена пользователей из сообщений
+            const userNames = {};
+            topics.forEach(topic => {
+                if (topic.messages) {
+                    topic.messages.forEach(msg => {
+                        if (msg.author_id) {
+                            userNames[msg.author_id] = msg.author;
+                        }
+                    });
+                }
+            });
+            
+            list.innerHTML = blockedUsers.map(id => {
+                const username = userNames[id] || 'Неизвестный';
+                return `
+                    <div class="blocked-user-item">
+                        <span>${username} (ID: ${id})</span>
+                        <button class="unblock-btn" onclick="unblockUser('${id}')">Разблокировать</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 🛡️ Переключение панели модератора
+        function toggleModPanel() {
+            const panel = document.getElementById('modPanel');
+            panel.style.display = panel.style.display === 'none' || panel.style.display === '' ? 'block' : 'none';
+            if (panel.style.display === 'block') {
+                updateBlockedUsersList();
+            }
+        }
+
+        // Экранирование HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

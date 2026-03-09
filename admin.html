@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Модерация версий</title>
+    
+    <style>
+        :root {
+            --primary-color: #8C1C13;
+            --secondary-color: #6B4E47;
+            --accent-color: #BF4342;
+            --text-color: #ffffff;
+            --bg-color: #E7D7C1;
+            --card-bg: #A78A7F;
+            --card-border: #8C1C13;
+            --nav-bg: #8C1C13;
+            --approve-bg: #E8D5C4;
+            --approve-text: #6B4E47;
+            --reject-bg: #C94A4A;
+            --approved-bg: #27AE60;
+            --pending-bg: #F39C12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Фоновый шум */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CiAgPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMDAwIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiIvPgo8L3N2Zz4=');
+            z-index: -1;
+            opacity: 0.03;
+        }
+
+        /* Шапка */
+        .admin-header {
+            background-color: var(--secondary-color);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .admin-header h1 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-header .back-link {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .admin-header .back-link:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .logout-btn {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+
+        .logout-btn:hover {
+            background-color: #C0392B;
+            transform: translateY(-2px);
+        }
+
+        /* Основной контейнер */
+        .admin-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Статистика */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Фильтры */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .filter-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Список версий */
+        .versions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .version-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-left: 5px solid var(--pending-bg);
+            transition: all 0.3s ease;
+        }
+
+        .version-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .version-card.approved {
+            border-left-color: var(--approved-bg);
+            opacity: 0.7;
+        }
+
+        .version-card.rejected {
+            border-left-color: var(--reject-bg);
+            opacity: 0.6;
+        }
+
+        .version-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .version-date {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            color: var(--primary-color);
+        }
+
+        .version-nickname {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .version-content {
+            background-color: rgba(255,255,255,0.3);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--primary-color);
+            min-height: 80px;
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .approve-btn {
+            background-color: var(--approve-bg);
+            color: var(--approve-text);
+        }
+
+        .approve-btn:hover {
+            background-color: var(--approved-bg);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .reject-btn {
+            background-color: var(--reject-bg);
+            color: white;
+        }
+
+        .reject-btn:hover {
+            background-color: #A93226;
+            transform: scale(1.05);
+        }
+
+        .restore-btn {
+            background-color: var(--pending-bg);
+            color: white;
+        }
+
+        .restore-btn:hover {
+            background-color: #E67E22;
+            transform: scale(1.05);
+        }
+
+        /* Пустое состояние */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            color: var(--primary-color);
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            opacity: 0.8;
+        }
+
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            background-color: var(--approved-bg);
+        }
+
+        .notification.error {
+            background-color: var(--reject-bg);
+        }
+
+        .notification.info {
+            background-color: var(--pending-bg);
+        }
+
+        /* Модальное окно подтверждения */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .admin-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .version-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .version-actions {
+                width: 100%;
+            }
+
+            .action-btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        /* Индикатор загрузки */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-color);
+        }
+
+        .spinner {
+            border: 4px solid rgba(140, 28, 19, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>
+            <span>⚙️</span>
+            Версии на модерации
+        </h1>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="index.html" class="back-link">← На главную</a>
+            <button class="logout-btn" id="logoutBtn">Выйти</button>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- Статистика -->
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="totalCount">0</h3>
+                <p>Всего версий</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="pendingCount">0</h3>
+                <p>На модерации</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="approvedCount">0</h3>
+                <p>Одобрено</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="rejectedCount">0</h3>
+                <p>Отклонено</p>
+            </div>
+        </div>
+
+        <!-- Фильтры -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterVersions('all')">Все</button>
+            <button class="filter-btn" onclick="filterVersions('pending')">Новые</button>
+            <button class="filter-btn" onclick="filterVersions('approved')">Одобренные</button>
+            <button class="filter-btn" onclick="filterVersions('rejected')">Отклоненные</button>
+        </div>
+
+        <!-- Список версий -->
+        <div class="versions-list" id="versionsList">
+            <!-- Версии будут загружены через JavaScript -->
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Загрузка теорий...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Подтверждение</h3>
+            <p id="modalText">Вы уверены, что хотите отклонить эту версию?</p>
+            <div class="modal-buttons">
+                <button class="action-btn reject-btn" id="modalConfirm">Подтвердить</button>
+                <button class="action-btn approve-btn" onclick="closeModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация данных
+        let versions = [];
+        let currentFilter = 'all';
+        let currentAction = null;
+        let currentId = null;
+        let currentUser = null;
+
+        // Загрузка при старте
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        });
+
+        // Проверка авторизации
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth-check.php', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.success && (result.user.role === 'admin' || result.user.role === 'moderator')) {
+                    currentUser = result.user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    document.querySelector('.back-link').textContent = `👤 ${currentUser.username} (${currentUser.role === 'admin' ? 'Админ' : 'Модератор'})`;
+                    loadVersions();
+                } else {
+                    alert('Доступ запрещен. Требуются права администратора или модератора.');
+                    window.location.href = 'auth.html';
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                // Резервный вариант: проверка localStorage
+                const localUser = localStorage.getItem('currentUser');
+                if (localUser) {
+                    currentUser = JSON.parse(localUser);
+                    if (currentUser.role === 'admin' || currentUser.role === 'moderator') {
+                        document.querySelector('.back-link').textContent = `👤 ${currentUser.username} (${currentUser.role === 'admin' ? 'Админ' : 'Модератор'})`;
+                        loadVersions();
+                    } else {
+                        alert('Доступ запрещен. Требуются права администратора или модератора.');
+                        window.location.href = 'auth.html';
+                    }
+                } else {
+                    alert('Ошибка проверки авторизации. Пожалуйста, войдите в систему.');
+                    window.location.href = 'auth.html';
+                }
+            }
+        }
+
+        // Выход из системы
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'auth.html';
+        }
+
+        // Загрузка версий с сервера
+        async function loadVersions() {
+            try {
+                const response = await fetch('/api/get-theories.php', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    versions = result.theories || [];
+                    renderVersions();
+                    updateStats();
+                } else {
+                    console.error('Error loading theories:', result.message);
+                    // Резервный вариант: загрузка из localStorage
+                    loadVersionsFromLocalStorage();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // Резервный вариант: загрузка из localStorage
+                loadVersionsFromLocalStorage();
+            }
+        }
+
+        // Загрузка версий из localStorage (резервный вариант)
+        function loadVersionsFromLocalStorage() {
+            const theories = JSON.parse(localStorage.getItem('theories')) || [];
+            versions = theories.filter(t => t.status === 'pending');
+            renderVersions();
+            updateStats();
+            showNotification('Сервер недоступен. Загружены данные из кэша.', 'info');
+        }
+
+        // Фильтрация
+        function filterVersions(filter) {
+            currentFilter = filter;
+            
+            // Обновление активной кнопки
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderVersions();
+        }
+
+        // Отрисовка версий
+        function renderVersions() {
+            const container = document.getElementById('versionsList');
+            container.innerHTML = '';
+
+            let filteredVersions = versions;
+
+            if (currentFilter === 'pending') {
+                filteredVersions = versions.filter(v => v.status === 'pending' || !v.status);
+            } else if (currentFilter === 'approved') {
+                filteredVersions = versions.filter(v => v.status === 'approved');
+            } else if (currentFilter === 'rejected') {
+                filteredVersions = versions.filter(v => v.status === 'rejected');
+            }
+
+            if (filteredVersions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>📭 Нет версий</h2>
+                        <p>${getEmptyMessage()}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Сортировка: новые сверху
+            filteredVersions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            filteredVersions.forEach(version => {
+                const card = createVersionCard(version);
+                container.appendChild(card);
+            });
+        }
+
+        // Создание карточки версии
+        function createVersionCard(version) {
+            const card = document.createElement('div');
+            card.className = `version-card ${version.status || 'pending'}`;
+            
+            const date = new Date(version.date).toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const nickname = version.email ? version.email.split('@')[0] : 'Аноним';
+            
+            card.innerHTML = `
+                <div class="version-header">
+                    <span class="version-date">📅 ${date}</span>
+                    <span class="version-nickname">@${escapeHtml(nickname)}</span>
+                </div>
+                <div class="version-content">${escapeHtml(version.description)}</div>
+                <div class="version-actions">
+                    ${getActionButtons(version)}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Получение кнопок действий
+        function getActionButtons(version) {
+            if (version.status === 'pending' || !version.status) {
+                return `
+                    <button class="action-btn reject-btn" onclick="showConfirm('reject', ${version.id})">
+                        ✕ Отклонить
+                    </button>
+                    <button class="action-btn approve-btn" onclick="approveVersion(${version.id})">
+                        ✓ Одобрить
+                    </button>
+                `;
+            } else if (version.status === 'approved') {
+                return `
+                    <button class="action-btn restore-btn" onclick="restoreVersion(${version.id})">
+                        ↺ Вернуть на модерацию
+                    </button>
+                `;
+            } else {
+                return `
+                    <button class="action-btn restore-btn" onclick="restoreVersion(${version.id})">
+                        ↺ Вернуть на модерацию
+                    </button>
+                `;
+            }
+        }
+
+        // Получение текста статуса
+        function getStatusText(status) {
+            const statuses = {
+                'pending': 'На модерации',
+                'approved': 'Одобрено',
+                'rejected': 'Отклонено'
+            };
+            return statuses[status] || status;
+        }
+
+        // Получение сообщения для пустого состояния
+        function getEmptyMessage() {
+            const messages = {
+                'all': 'Пока нет ни одной версии',
+                'pending': 'Нет версий на модерации',
+                'approved': 'Нет одобренных версий',
+                'rejected': 'Нет отклоненных версий'
+            };
+            return messages[currentFilter] || 'Нет данных';
+        }
+
+        // Одобрение версии
+        async function approveVersion(id) {
+            try {
+                const response = await fetch('/api/moderate-theory.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        action: 'approve'
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Версия одобрена и опубликована', 'success');
+                    loadVersions();
+                } else {
+                    showNotification('Ошибка при одобрении: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // Резервный вариант: обновление в localStorage
+                const index = versions.findIndex(v => v.id == id);
+                if (index !== -1) {
+                    versions[index].status = 'approved';
+                    versions[index].moderatedAt = new Date().toISOString();
+                    localStorage.setItem('theories', JSON.stringify(versions));
+                    showNotification('Версия одобрена (локально)', 'success');
+                    renderVersions();
+                    updateStats();
+                } else {
+                    showNotification('Ошибка при одобрении: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Показ модального окна подтверждения
+        function showConfirm(action, id) {
+            currentAction = action;
+            currentId = id;
+            
+            const modal = document.getElementById('confirmModal');
+            const title = document.getElementById('modalTitle');
+            const text = document.getElementById('modalText');
+            const confirmBtn = document.getElementById('modalConfirm');
+            
+            title.textContent = 'Отклонить версию?';
+            text.textContent = 'Вы уверены, что хотите отклонить эту версию?';
+            
+            confirmBtn.onclick = () => {
+                if (action === 'reject') {
+                    rejectVersion(id);
+                }
+                closeModal();
+            };
+            
+            modal.classList.add('active');
+        }
+
+        // Закрытие модального окна
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            currentAction = null;
+            currentId = null;
+        }
+
+        // Отклонение версии
+        async function rejectVersion(id) {
+            try {
+                const response = await fetch('/api/moderate-theory.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        action: 'reject'
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Версия отклонена', 'error');
+                    loadVersions();
+                } else {
+                    showNotification('Ошибка при отклонении: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // Резервный вариант: обновление в localStorage
+                const index = versions.findIndex(v => v.id == id);
+                if (index !== -1) {
+                    versions[index].status = 'rejected';
+                    versions[index].moderatedAt = new Date().toISOString();
+                    localStorage.setItem('theories', JSON.stringify(versions));
+                    showNotification('Версия отклонена (локально)', 'error');
+                    renderVersions();
+                    updateStats();
+                } else {
+                    showNotification('Ошибка при отклонении: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Восстановление версии
+        async function restoreVersion(id) {
+            try {
+                const response = await fetch('/api/moderate-theory.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        action: 'restore'
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Версия возвращена на модерацию', 'info');
+                    loadVersions();
+                } else {
+                    showNotification('Ошибка при восстановлении: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Ошибка при восстановлении: ' + error.message, 'error');
+            }
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            const total = versions.length;
+            const pending = versions.filter(v => v.status === 'pending' || !v.status).length;
+            const approved = versions.filter(v => v.status === 'approved').length;
+            const rejected = versions.filter(v => v.status === 'rejected').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('rejectedCount').textContent = rejected;
+        }
+
+        // Показ уведомления
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Экранирование HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Закрытие модального окна при клике вне его
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+
+        // Автообновление каждые 30 секунд
+        setInterval(() => {
+            loadVersions();
+        }, 30000);
+    </script>
+</body>
+</html>

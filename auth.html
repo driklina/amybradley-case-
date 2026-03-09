@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Дело Эми Лин Брэдли</title>
+    
+    <style>
+        :root {
+            --primary-color: #8C1C13;
+            --secondary-color: #8C1C13;
+            --accent-color: #BF4342;
+            --text-color: #ffffff;
+            --bg-color: #E7D7C1;
+            --card-bg: #A78A7F;
+            --input-bg: #F5EBE0;
+            --border-color: #2E86C1;
+            --error-color: #E74C3C;
+            --success-color: #27AE60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: url('image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CiAgPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMDAwIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiIvPgo8L3N2Zz4=');
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .form-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .tab-btn.active {
+            opacity: 1;
+            border-bottom: 3px solid var(--accent-color);
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            opacity: 0.8;
+        }
+
+        .form-container {
+            position: relative;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-row {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .form-group.full-width {
+            width: 100%;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid transparent;
+            border-radius: 6px ;
+            background-color: var(--input-bg);
+            color: var(--primary-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--border-color);
+            background-color: #fff;
+            border-radius: 6px; 
+        }
+
+        .form-group input::placeholder {
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        /* Стили для полей в одном ряду */
+        .form-row .form-group:first-child input {
+            border-radius: 6px 0 0 6px;
+            border-right: 2px solid rgba(140, 28, 19, 0.2);
+        }
+
+        .form-row .form-group:last-child input {
+            border-radius: 0 6px 6px 0;
+        }
+
+        .form-row .form-group input:focus {
+            border-radius: 6px ;
+            border-right: 2px solid var(--border-color);
+        }
+
+        .form-row .form-group:last-child input:focus {
+            border-radius:  6px ;
+            border-right: 2px solid var(--border-color);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(140, 28, 19, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .form-footer {
+            margin-top: 25px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .form-footer a:hover {
+            opacity: 1;
+            text-decoration: underline;
+            color: var(--accent-color);
+        }
+
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-home:hover {
+            color: var(--accent-color);
+            transform: translateX(-5px);
+        }
+
+        .alert {
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .alert-success {
+            background-color: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background-color: rgba(140, 28, 19, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background-color: var(--error-color);
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background-color: #F39C12;
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background-color: var(--success-color);
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-row .form-group:first-child input,
+            .form-row .form-group:last-child input {
+                border-radius: 6px;
+                border-right: 2px solid transparent;
+            }
+
+            .form-footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-to-home">← На главную</a>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>🔐 Авторизация</h1>
+            <p>Дело Эми Линн Брэдли</p>
+        </div>
+
+        <div class="alert" id="alert"></div>
+
+        <div class="form-tabs">
+            <button class="tab-btn active" onclick="switchTab('login')">Войти</button>
+            <button class="tab-btn" onclick="switchTab('register')">Регистрация</button>
+        </div>
+
+        <div class="form-container">
+            <!-- Форма входа -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            id="loginUsername" 
+                            placeholder="username" 
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            placeholder="password" 
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Войти</button>
+
+                <div class="form-footer">
+                    <a href="#" onclick="showForgotPassword(); return false;">You forgot password?</a>
+                    <a href="#" onclick="switchTab('register'); return false;">Зарегистрироваться</a>
+                </div>
+            </form>
+
+            <!-- Форма регистрации -->
+            <form class="auth-form" id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            id="regUsername" 
+                            placeholder="username" 
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <input 
+                            type="password" 
+                            id="regPassword" 
+                            placeholder="password" 
+                            required
+                            autocomplete="new-password"
+                            oninput="checkPasswordStrength()"
+                        >
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <input 
+                        type="email" 
+                        id="regEmail" 
+                        placeholder="email" 
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <button type="submit" class="submit-btn">Зарегистрироваться</button>
+
+                <div class="form-footer">
+                    <a href="#" onclick="switchTab('login'); return false;">Уже есть аккаунт? Войти</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Переключение между вкладками
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tab-btn');
+
+            hideAlert();
+
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        // Проверка сложности пароля
+        function checkPasswordStrength() {
+            const password = document.getElementById('regPassword').value;
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            
+            let strength = 0;
+            
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            strengthBar.className = 'password-strength-bar';
+            
+            if (strength <= 2) {
+                strengthBar.classList.add('weak');
+            } else if (strength <= 4) {
+                strengthBar.classList.add('medium');
+            } else {
+                strengthBar.classList.add('strong');
+            }
+        }
+
+        // Показать сообщение
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert alert-${type} show`;
+
+            setTimeout(() => {
+                hideAlert();
+            }, 5000);
+        }
+
+        // Скрыть сообщение
+        function hideAlert() {
+            const alert = document.getElementById('alert');
+            alert.classList.remove('show');
+        }
+
+        // Обработка формы входа
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                showAlert('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+
+            try {
+                // Отправка данных на сервер
+                const response = await fetch('/api/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Сохраняем данные в localStorage для сессии
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
+                    
+                    showAlert('Успешный вход!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    // Резервный вариант: проверка дефолтных учётных записей
+                    if ((username === 'admin' && password === 'admin123') || 
+                        (username === 'moderator' && password === 'mod123')) {
+                        
+                        const user = {
+                            id: username === 'admin' ? 'admin1' : 'mod1',
+                            username: username,
+                            role: username === 'admin' ? 'admin' : 'moderator',
+                            email: username === 'admin' ? 'admin@amybradley.com' : 'mod@amybradley.com'
+                        };
+                        
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        showAlert(`Успешный вход! ${username === 'admin' ? '⚙️ Админ' : '🛡️ Модератор'}`, 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        showAlert('Неверное имя пользователя или пароль', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка при входе:', error);
+                showAlert('Ошибка подключения к серверу. Попробуйте позже.', 'error');
+            }
+        });
+
+        // Обработка формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const email = document.getElementById('regEmail').value.trim();
+
+            if (!username || !password || !email) {
+                showAlert('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+
+            if (username.length < 3) {
+                showAlert('Имя пользователя должно содержать не менее 3 символов', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Пароль должен содержать минимум 6 символов', 'error');
+                return;
+            }
+
+            // Простая валидация email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showAlert('Неверный формат email', 'error');
+                return;
+            }
+
+            try {
+                // Отправка данных на сервер
+                const response = await fetch('/api/register.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Автоматическая авторизация после регистрации
+                    const loginResponse = await fetch('/api/login.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password
+                        }),
+                        credentials: 'include'
+                    });
+                    
+                    const loginResult = await loginResponse.json();
+                    
+                    if (loginResult.success) {
+                        localStorage.setItem('currentUser', JSON.stringify(loginResult.user));
+                        showAlert('Регистрация успешна! Добро пожаловать!', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        showAlert('Регистрация успешна, но вход не выполнен. Попробуйте войти вручную.', 'success');
+                        setTimeout(() => {
+                            switchTab('login');
+                        }, 3000);
+                    }
+                } else {
+                    showAlert('Ошибка: ' + (result.message || 'Неизвестная ошибка'), 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка при регистрации:', error);
+                showAlert('Ошибка подключения к серверу. Попробуйте позже.', 'error');
+            }
+        });
+
+        // Показать восстановление пароля
+        function showForgotPassword() {
+            const email = prompt('Введите ваш email для восстановления пароля:');
+            
+            if (email) {
+                alert('В данном демонстрационном проекте восстановление пароля не реализовано.\nИспользуйте тестовые данные:\n• Админ: admin / admin123\n• Модератор: moderator / mod123');
+            }
+        }
+
+        // Проверка авторизации при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                showAlert(`Вы уже вошли как ${user.username}`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        });
+
+        // Обработка нажатия Enter в полях формы
+        document.getElementById('loginUsername').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').requestSubmit();
+            }
+        });
+
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').requestSubmit();
+            }
+        });
+
+        document.getElementById('regUsername').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('registerForm').requestSubmit();
+            }
+        });
+
+        document.getElementById('regPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('registerForm').requestSubmit();
+            }
+        });
+
+        document.getElementById('regEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('registerForm').requestSubmit();
+            }
+        });
+    </script>
+</body>
+</html>

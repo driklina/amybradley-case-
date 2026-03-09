@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эми Лин Брэдли</title>
+
+    <!-- SEO & Social Meta -->
+    <meta name="description" content="Дело Эми Линн Брэдли — пропавшая без вести с круизного лайнера в 1998 году. Хронология, теории, контакты.">
+    <meta property="og:title" content="Эми Лин Брэдли — Исчезновение без следа">
+    <meta property="og:description" content="Американка пропала с корабля Rhapsody of the Seas. Возможно, жертва торговли людьми.">
+    <meta property="og:image" content="/amy-preview.jpg">
+    <meta property="og:type" content="website">
+
+    <style>
+        :root {
+            --primary-color: #8C1C13;
+            --secondary-color: #8C1C13;
+            --accent-color: #BF4342;
+            --text-color: #ffffff;
+            --bg-color: #E7D7C1;
+            --card-bg: #A78A7F;
+            --nav-bg: #8C1C13;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Фоновый шум */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CiAgPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMDAwIi8+CiAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjEiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiIvPgo8L3N2Zz4=');
+            z-index: -1;
+            opacity: 0.03;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background-color: var(--nav-bg);
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+        }
+
+        section.visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        section h2 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .bio-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .photos {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .photo-item {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .bio-text {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #000000;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .timeline-item {
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: #000000;
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .suspicions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .suspicion-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            color: #000000;
+        }
+
+        .suspicion-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .theory-form {
+            background-color: var(--nav-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--card-bg);
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .submit-btn {
+            background-color: #E7D7C1;
+            color: #000000;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.15rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: auto;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+
+        .submit-btn:hover {
+            background-color: #d9c7b2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        .contact-info {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            color: #000000;
+        }
+
+        .contact-info h3 {
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+            color: #000000;
+        }
+
+        .contact-info a {
+            color: #000000;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--secondary-color);
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Кнопка наверх */
+        #backToTop {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            z-index: 99;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        #backToTop:hover {
+            background: #ff6666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .photo-item {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .timeline-item {
+                padding: 0.75rem;
+            }
+            
+            .suspicion-card {
+                padding: 1rem;
+            }
+            
+            .theory-form {
+                padding: 1.5rem;
+            }
+            
+            .submit-btn {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ЭМИ ЛИН БРЭДЛИ</h1>
+        <p>Исчезла 24 марта 1998 года с круизного лайнера Rhapsody of the Seas</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#biography" class="active">Биография</a></li>
+            <li><a href="#chronology">Хронология</a></li>
+            <li><a href="#suspicions">Подозреваемые</a></li>
+            <li><a href="#theories">Ваши теории</a></li>
+            <li><a href="#contacts">Контакты</a></li>
+            <li><a href="profile.html">Личный кабинет</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="biography">
+            <h2>Биография</h2>
+            <div class="bio-container">
+                <div class="photos">
+                    <div class="photo-item"><img src="img/1.webp" alt="Эми Линн Брэдли"></div>
+                    <div class="photo-item"><img src="img/2.webp" alt="Эми Линн Брэдли"></div>
+                    <div class="photo-item"><img src="img/3.webp" alt="Эми Линн Брэдли"></div>
+                </div>
+                <div class="bio-text">
+                    <p>Эми Линн Брэдли (родилась 12 мая 1974 года) — американка, пропавшая без вести во время круиза по Карибскому морю на международном круизном лайнере Royal Caribbean Rhapsody of the Seas в конце марта 1998 года по пути на Кюрасао.</p>
+                    <p>На момент исчезновения девушке было 23 года. Власти начали предполагать, что она, возможно, упала за борт и утонула или покончила с собой.</p>
+                    <p>За годы, прошедшие с момента исчезновения, было несколько заявлений о том, что Брэдли видели на Кюрасао, Барбадосе и в Сан-Франциско. Хотя следователи не смогли подтвердить ни одно из этих наблюдений, они подогрели слухи о том, что Брэдли стал жертвой нечестной игры или торговли людьми.</p>
+                    <p>24 марта 2010 года Эми Линн Брэдли была официально объявлена умершей, через двенадцать лет после исчезновения без свидетелей и без найденного тела.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="chronology">
+            <h2>Хронология</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">23 марта 1998</div>
+                    <div>Лайнер покидает Пуэрто-Рико.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">24 марта, 5:15 утра</div>
+                    <div>Эми в каюту, балкон открыт.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">6:30 утра</div>
+                    <div>Семья обнаруживает, что её нет.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">25–26 марта</div>
+                    <div>Поиски у берегов Кюрасао и Арубы. Ничего не найдено.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1999–2024</div>
+                    <div>Десятки сообщений: «Я видел её в борделе», «Она звала на помощь».</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="suspicions">
+            <h2>Подозреваемые</h2>
+            <div class="suspicions">
+                <div class="suspicion-card">
+                    <h3>Сети торговли</h3>
+                    <p>Карибские острова — центр нелегальной торговли людьми в 1990-х. Эми могли похитить в порту.</p>
+                </div>
+                <div class="suspicion-card">
+                    <h3>Члены экипажа</h3>
+                    <p>Возможно, кто-то помог проникнуть в каюту или вывести её с корабля без срабатывания систем.</p>
+                </div>
+                <div class="suspicion-card">
+                    <h3>Местные преступные группировки</h3>
+                    <p>Фото из Венесуэлы и Колумбии (2005–2012) показывают женщину, похожую на Эми, в окружении бандитов.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="theories">
+            <h2>Ваши теории и версии</h2>
+            <div class="theory-form">
+                <form id="theoryForm">
+                    <div class="form-group">
+                        <label for="theoryDescription">Описание версии..</label>
+                        <textarea id="theoryDescription" placeholder="Расскажите свою версию событий..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Ваш email</label>
+                        <input type="email" id="userEmail" placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="submit-container">
+                        <button type="submit" class="submit-btn">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="contacts">
+            <h2>Контактная информация</h2>
+            <div class="contact-info">
+                <h3>ФБР (США): Case #1998-0324</h3>
+                <p>— <a href="https://tips.fbi.gov" target="_blank">tips.fbi.gov</a></p>
+                <p>Семья Брэдли: <a href="https://amybradleycase.org" target="_blank">amybradleycase.org</a> (официальный сайт семьи)</p>
+                <p>Не теряйте надежду. Иногда правда скрывается в деталях.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 | Сайт посвящён делу Эми Линн Брэдли | Не забывайте о пропавших</p>
+    </footer>
+
+    <!-- Кнопка "Наверх" -->
+    <button id="backToTop">↑</button>
+
+    <!-- Кнопка перехода на форум -->
+    <button id="forumButton" onclick="window.location.href='forum.html'">💬 Форум</button>
+
+    <style>
+        #forumButton {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        #forumButton:hover {
+            background: #ff6666;
+            transform: scale(1.05);
+        }
+    </style>
+
+    <script>
+        // Smooth scroll + активная ссылка при клике (только для якорей)
+        document.querySelectorAll('nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            // Применяем плавную прокрутку только для якорей (#...)
+            if (href && href.startsWith('#')) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(href);
+                    
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            }
+            // Ссылки на страницы (profile.html) работают как обычно — без блокировки
+        });
+
+        // Обработка формы - отправка на модерацию через API
+        document.getElementById('theoryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const description = document.getElementById('theoryDescription').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            
+            if (description && email) {
+                try {
+                    // Отправка данных на сервер
+                    const response = await fetch('/api/submit-theory.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            description: description,
+                            email: email
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('✅ Ваша теория отправлена на модерацию!\nАдминистратор рассмотрит её в ближайшее время.');
+                        this.reset();
+                    } else {
+                        alert('❌ Ошибка: ' + (result.message || 'Неизвестная ошибка'));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    // Если сервер недоступен, сохраняем в localStorage как резерв
+                    const theory = {
+                        id: Date.now(),
+                        description: description,
+                        nickname: email.split('@')[0],
+                        email: email,
+                        date: new Date().toISOString(),
+                        status: 'pending'
+                    };
+                    
+                    const theories = JSON.parse(localStorage.getItem('theories')) || [];
+                    theories.unshift(theory);
+                    localStorage.setItem('theories', JSON.stringify(theories));
+                    
+                    alert('✅ Ваша теория сохранена (сервер временно недоступен).\nБудет отправлена при следующей синхронизации.');
+                    this.reset();
+                }
+            } else {
+                alert('Пожалуйста, заполните все поля.');
+            }
+        });
+
+        // Кнопка "Наверх"
+        const backToTopButton = document.getElementById('backToTop');
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('scroll', () => {
+            backToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
+        });
+
+        // Автоподсветка активного раздела при скролле
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-80px 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        sections.forEach(section => observer.observe(section));
+
+        // Инициализация видимости секций
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                sections.forEach(section => section.classList.add('visible'));
+            }, 100);
+        });
+    </script>
+
+</body>
+</html>
