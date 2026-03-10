@@ -357,6 +357,70 @@
                 max-width: none;
             }
         }
+    /* Дополнительная адаптивность для главной страницы */
+    @media (max-width: 1024px) {
+        .suspicions {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        
+        .bio-container {
+            flex-direction: column;
+        }
+        
+        .photos {
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        header p {
+            font-size: 0.9rem;
+        }
+        
+        nav ul {
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        section {
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .bio-text {
+            font-size: 1rem;
+        }
+        
+        .timeline-item {
+            padding: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .submit-btn {
+            font-size: 1rem;
+            padding: 0.75rem;
+        }
+        
+        footer {
+            font-size: 0.9rem;
+            padding: 1rem;
+        }
+        
+        #forumButton {
+            font-size: 0.9rem;
+            padding: 10px 20px;
+        }
+    }
     </style>
 </head>
 <body>
