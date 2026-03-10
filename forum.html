@@ -99,8 +99,8 @@
         }
 
         .login-btn {
-            background-color: var(--accent-color);
-            color: var(--primary-color);
+            background-color: #6c757d;
+            color: #ffffff;
             border: none;
             padding: 0.5rem 1.5rem;
             border-radius: 4px;
@@ -110,8 +110,9 @@
         }
 
         .login-btn:hover {
-            background-color: #ff6666;
+            background-color: #5a6268;
             transform: translateY(-2px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
         .logout-btn {
@@ -625,6 +626,116 @@
                 border-radius: 4px;
             }
         }
+ /* Дополнительная адаптивность для форума */
+    @media (max-width: 1024px) {
+        .sidebar {
+            width: 250px;
+        }
+        
+        .message-author {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .forum-header {
+            padding: 0.8rem 1rem;
+        }
+        
+        .forum-header h1 {
+            font-size: 1.2rem;
+        }
+        
+        .sidebar {
+            width: 100%;
+            max-height: 250px;
+            padding: 1rem;
+        }
+        
+        .main-content {
+            padding: 1rem;
+        }
+        
+        .topic-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .message-author {
+            font-size: 0.95rem;
+        }
+        
+        .message-date {
+            font-size: 0.8rem;
+        }
+        
+        .modal-content {
+            padding: 1.5rem;
+        }
+        
+        .modal-content h2 {
+            font-size: 1.3rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .forum-header {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .auth-section {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .user-info {
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .user-role {
+            font-size: 11px;
+            padding: 2px 6px;
+        }
+        
+        .topic-item h4 {
+            font-size: 0.9rem;
+        }
+        
+        .topic-item span {
+            font-size: 0.75rem;
+        }
+        
+        .message-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+        
+        .message-actions {
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .mod-btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            padding: 1rem;
+        }
+        
+        .form-group label {
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            padding: 0.6rem;
+            font-size: 0.95rem;
+        }
+    }
     </style>
 </head>
 <body>
